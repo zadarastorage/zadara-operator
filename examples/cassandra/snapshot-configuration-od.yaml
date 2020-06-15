@@ -1,0 +1,9 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotConfiguration
+metadata:
+  name: cassandra-on-demand-snapshot-cfg
+spec:
+  appDefinition: "cassandra-test-app-definition"
+  policies:
+    - "on-demand"

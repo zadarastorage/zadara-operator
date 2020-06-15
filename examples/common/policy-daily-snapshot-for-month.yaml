@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: daily-snapshot-for-month
+spec:
+  schedule: "0 0 * * *"
+  keepLast: 30

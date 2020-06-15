@@ -1,0 +1,12 @@
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: daily-snapshot-for-month
+spec:
+  # schedule: either cron expression or "on-demand"
+  # various extended cron syntax options are supported:
+  #  slash notation: */10, */5
+  #  predefined schedules: @daily, @hourly, ...
+  #  weekdays and months: SUN,MON,TUE,... JAN,FEB,MAR,...
+  schedule: "0 0 * * *"
+  keepLast: 7

@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: Invoker
+metadata:
+  name: mysql-clone
+spec:
+  cloneConfiguration:
+    name: "mysql-test-clone-cfg"

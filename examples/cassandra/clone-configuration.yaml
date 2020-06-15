@@ -1,0 +1,9 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: CloneConfiguration
+metadata:
+  name: cassandra-test-clone-cfg
+spec:
+  appSnapshot:
+    name: "SNAPSHOT_NAME_HERE"
+  targetNamespace: "cloned"

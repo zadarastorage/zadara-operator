@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: Invoker
+metadata:
+  name: cassandra-clone
+spec:
+  cloneConfiguration:
+    name: "cassandra-test-clone-cfg"

@@ -1,0 +1,9 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotConfiguration
+metadata:
+  name: mysql-on-demand-snapshot-cfg
+spec:
+  appDefinition: "default-test-mysql"
+  policies:
+    - "on-demand"

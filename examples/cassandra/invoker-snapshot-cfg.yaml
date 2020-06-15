@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: Invoker
+metadata:
+  name: cassandra-snapshot
+spec:
+  snapshotConfiguration:
+    name: "cassandra-test-snapshot-cfg"

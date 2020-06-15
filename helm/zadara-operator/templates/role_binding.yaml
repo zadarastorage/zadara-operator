@@ -1,0 +1,15 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: zoperator
+subjects:
+- kind: ServiceAccount
+  name: zoperator
+  namespace: default
+- kind: ServiceAccount
+  name: zoperator
+  namespace: zadara
+roleRef:
+  kind: ClusterRole
+  name: zoperator
+  apiGroup: rbac.authorization.k8s.io

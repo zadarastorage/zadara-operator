@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: every-two-minutes
+spec:
+  schedule: "*/2 * * * *"
+  keepLast: 5

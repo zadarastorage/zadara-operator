@@ -1,0 +1,32 @@
+apiVersion: v1
+data:
+  zadara-operator-config.yaml: |
+    # Verbosity level for logs.
+    # Allowed values: panic, fatal, error, warn or warning, info, debug
+    logLevel:
+      app-definition: "info"
+      app-clone: "info"
+      app-snapshot: "info"
+      # Cronjobs owned by operator for ApplicationSnapshots management
+      cronjob: "info"
+      csi: "info"
+      general: "info"
+      invoker: "info"
+      policy: "info"
+      snapshot-cfg: "info"
+      vpsa: "info"
+      zoperator: "info"
+    # Use colored output in logs. Does not auto-detect pipes, redirection, or other non-interactive outputs.
+    useLogColors: "true"
+    # Parameters for default storage classes Operator creates for each VPSA
+    # See https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy
+    defaultStorageClass:
+      reclaimPolicy: "Retain"
+    csi:
+      repository: zadara/csi-driver
+      tag: 1.2.4
+      pullPolicy: IfNotPresent
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: zoperator-config-map

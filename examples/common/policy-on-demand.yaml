@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: on-demand
+spec:
+  schedule: "on-demand"
+  keepLast: 3

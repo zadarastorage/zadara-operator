@@ -1,0 +1,10 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotConfiguration
+metadata:
+  name: cassandra-test-snapshot-cfg
+spec:
+  appDefinition: "cassandra-test-app-definition"
+  policies:
+    - "every-ten-minutes"
+    - "every-two-minutes"

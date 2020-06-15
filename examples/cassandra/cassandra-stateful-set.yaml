@@ -1,0 +1,80 @@
+---
+apiVersion: "apps/v1"
+kind: StatefulSet
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  serviceName: cassandra
+  selector:
+    matchLabels:
+      app: cassandra
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: cassandra
+          image: gcr.io/google-samples/cassandra:v12
+          ports:
+            - containerPort: 7000
+              name: intra-node
+            - containerPort: 7001
+              name: tls-intra-node
+            - containerPort: 7199
+              name: jmx
+            - containerPort: 9042
+              name: cql
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "PID=$(pidof java) && kill $PID && while ps -p $PID > /dev/null; do sleep 1; done"]
+          env:
+            - name: MAX_HEAP_SIZE
+              value: 512M
+            - name: HEAP_NEWSIZE
+              value: 100M
+            - name: CASSANDRA_SEEDS
+              value: "cassandra-0.cassandra.default.svc.cluster.local"
+            - name: CASSANDRA_CLUSTER_NAME
+              value: "K8Demo"
+            - name: CASSANDRA_DC
+              value: "DC1-K8Demo"
+            - name: CASSANDRA_RACK
+              value: "Rack1-K8Demo"
+            - name: CASSANDRA_AUTO_BOOTSTRAP
+              value: "false"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          # These volume mounts are persistent. They are like inline claims,
+          # but not exactly because the names need to match exactly one of
+          # the stateful pod volumes.
+          volumeMounts:
+            - name: cassandra-data
+              mountPath: /var/lib/cassandra
+  # These are converted to volume claims by the controller
+  # and mounted at the paths mentioned above.
+  volumeClaimTemplates:
+    - metadata:
+        name: cassandra-data
+      spec:
+        storageClassName: STORAGE_CLASS_NAME_HERE
+        volumeMode: Filesystem
+        accessModes: [ "ReadWriteOnce", "ReadWriteMany" ]
+        resources:
+          requests:
+            storage: 100Gi

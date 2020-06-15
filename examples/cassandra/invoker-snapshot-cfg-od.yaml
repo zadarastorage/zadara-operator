@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: Invoker
+metadata:
+  name: cassandra-on-demand-snapshot
+spec:
+  snapshotConfiguration:
+    name: "cassandra-on-demand-snapshot-cfg"

@@ -1,0 +1,15 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: Vpsa
+metadata:
+  name: example-vpsa
+spec:
+  hostname: "HOSTNAME_HERE"
+  https: false
+  token: "TOKEN_HERE"
+  csi:
+    provisioner: "csi.zadara.com"
+    iscsiMode: "rootfs"
+    livenessProbe:
+      httpGet:
+        port: 9808

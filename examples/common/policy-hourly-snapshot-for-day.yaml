@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: hourly-snapshot-for-day
+spec:
+  schedule: "@hourly"
+  keepLast: 24

@@ -1,0 +1,13 @@
+##############################################################################
+####   Successfully installed Zadara Operator                             ####
+##############################################################################
+
+User guide: TODO
+Download CLI: TODO
+
+
+Start with creating Vpsa:
+
+cat <<EOF | kubectl apply -f -
+{{ .Files.Get "example-vpsa.yaml" }}
+EOF

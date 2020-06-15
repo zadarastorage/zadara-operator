@@ -1,0 +1,9 @@
+apiVersion: zadara.com/v1alpha1
+kind: SnapshotConfiguration
+metadata:
+  name: dr-us-west-snapshot
+spec:
+  appDefinition: cassandra-test
+  policies:
+    - "daily-snapshot-for-month"
+    - "weekly-snapshot-for-year"

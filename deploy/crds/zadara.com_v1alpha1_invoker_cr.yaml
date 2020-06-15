@@ -1,0 +1,8 @@
+apiVersion: zadara.com/v1alpha1
+kind: Invoker
+metadata:
+  name: mysql-daily-backup
+spec:
+  # one-of: snapshotConfiguration | cloneConfiguration
+  snapshotConfiguration:
+    name: "dr-us-west-snapshot"

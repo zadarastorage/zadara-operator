@@ -1,0 +1,8 @@
+---
+apiVersion: zadara.com/v1alpha1
+kind: Invoker
+metadata:
+  name: mysql-on-demand-snapshot
+spec:
+  snapshotConfiguration:
+    name: "mysql-on-demand-snapshot-cfg"

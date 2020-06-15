@@ -1,0 +1,18 @@
+apiVersion: v2
+name: zadara-operator
+version: 0.1.1
+appVersion: 0.1.1
+# TODO: update description
+description: "Zadara Storage Operator: automatic CSI driver management and Data Protection services"
+# TODO: test k8s compatibility. Syntax: >= 1.13.0 < 1.14.0 || >= 1.14.1 < 1.15.0 || 1.x.x || 1.16.2 - 1.18.*
+# kubeVersion: >= 1.16.0
+# TODO: more keywords?
+keywords: ["CSI", "Storage", "Zadara", "VPSA", "NAS", "Block", "Persistent Volume", "Cloud Storage", "STaaS", "PVC"]
+home: zadara.com
+maintainers:
+  - email: aviad@zadara.com
+    name: Aviad Cohen
+  - email: levp@zadara.com
+    name: Lev Pechersky
+# TODO: replace
+icon: https://i.imgur.com/QbU2blh.png
