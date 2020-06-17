@@ -1,9 +1,0 @@
-apiVersion: zadara.com/v1alpha1
-kind: AppDefinition
-metadata:
-  name: cassandra-test
-spec:
-  namespace: "default"
-  selector:
-    matchLabels:
-      app: "cassandra"

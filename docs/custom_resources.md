@@ -35,9 +35,13 @@ spec:
   csi:
     provisioner: "csi.zadara.com"
     iscsiMode: "rootfs"
+    # Support VPSA Volume auto-expand feature
+    autoExpandSupport: true
     # livenessProbe: k8s built-in, some fields omitted
     livenessProbe:
       periodSeconds: 5
+      httpGet:
+        port: 9808
 
 ```
 
@@ -49,6 +53,7 @@ Field | Description | Notes
 `spec.https` | Use https connection to the VPSA (default: http) | Required
 `spec.token` | Token of the VPSA | Required
 `spec.csi` | CSI provisioner |
+`spec.csi.autoExpandSupport` | Support VPSA Volume auto-expand feature. Enabled by default. To enable auto-expand for CSI Volumes, you need to configure Storage Class parameters.volumeOptions https://github.com/zadarastorage/zadara-csi/#storage-class. When autoExpandSupport is enabled, periodical sync will be handled by a CronJob, running in the same namespace as CSI driver. |
 `spec.csi.iscsiMode` | A way for the CSI plugin to reach iscsiadm on host https://github.com/zadarastorage/zadara-csi#node-iscsi-connectivity | Required. Allowed values: `"rootfs"`, `"client-server"`
 `spec.csi.provisioner` | CSI provisioner to be used in StorageClass, for example `csi.zadara.com`. More: https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner |
 `spec.csi.livenessProbe` | Liveness probe configuration for CSI driver. Default livenessProbe.handler is httpGet: {path:"/healthz", port:9808}. Note: livenessProbe.handler MUST be httpGet, with path "/healthz". Other options not allowed. livenessProbe.handler.port is configurable (default 9808) and MUST be unique for each CSI instance. More: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes |

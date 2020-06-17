@@ -12,11 +12,6 @@ spec:
     description: Name of Snapshot Configuration
     name: Snapshot Configuration
     type: string
-  - JSONPath: .spec.Vpsas
-    description: Name of VPSAs
-    name: VPSAs
-    priority: 1
-    type: string
   - JSONPath: .metadata.creationTimestamp
     name: Age
     type: date

@@ -17,6 +17,11 @@ spec:
     name: Hostname
     priority: 1
     type: string
+  - JSONPath: .spec.csi.autoExpandSupport
+    description: Volume auto-expand support
+    name: Autoexpand
+    priority: 1
+    type: boolean
   - JSONPath: .metadata.creationTimestamp
     name: Age
     type: date
@@ -54,6 +59,13 @@ spec:
             csi:
               description: CSI provisioner
               properties:
+                autoExpandSupport:
+                  description: Support VPSA Volume auto-expand feature. Enabled by
+                    default. To enable auto-expand for CSI Volumes, you need to configure
+                    Storage Class parameters.volumeOptions https://github.com/zadarastorage/zadara-csi/#storage-class.
+                    When autoExpandSupport is enabled, periodical sync will be handled
+                    by a CronJob, running in the same namespace as CSI driver.
+                  type: boolean
                 iscsiMode:
                   description: A way for the CSI plugin to reach iscsiadm on host
                     https://github.com/zadarastorage/zadara-csi#node-iscsi-connectivity

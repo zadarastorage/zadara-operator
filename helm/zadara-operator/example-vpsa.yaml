@@ -10,6 +10,10 @@ spec:
   csi:
     provisioner: "csi.zadara.com"
     iscsiMode: "rootfs"
+    # Support VPSA Volume auto-expand feature
+    autoExpandSupport: true
     # livenessProbe: k8s built-in, some fields omitted
     livenessProbe:
       periodSeconds: 5
+      httpGet:
+        port: 9808

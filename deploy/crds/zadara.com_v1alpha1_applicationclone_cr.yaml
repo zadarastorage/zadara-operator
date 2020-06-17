@@ -1,7 +1,0 @@
-apiVersion: zadara.com/v1alpha1
-kind: ApplicationClone
-metadata:
-  name: cassandra-2009-02-09--19-52-14-clone
-spec:
-  # reference to metadata.name of CloneConfiguration
-  cloneConfiguration: "dr-us-west-clone"
