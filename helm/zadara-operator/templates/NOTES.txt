@@ -2,9 +2,10 @@
 ####   Successfully installed Zadara Operator                             ####
 ##############################################################################
 
-User guide: TODO
-Download CLI: TODO
+User guide: https://github.com/zadarastorage/zadara-operator
 
+For your convenience, we suggest downloading CLI helper tool, available at:
+https://github.com/zadarastorage/zadara-operator/tree/release/cli
 
 Start with creating Vpsa:
 
