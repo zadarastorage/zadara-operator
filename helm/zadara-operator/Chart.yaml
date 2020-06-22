@@ -1,7 +1,7 @@
 apiVersion: v2
 name: zadara-operator
-version: 0.2.3
-appVersion: 0.2.3
+version: 0.2.4
+appVersion: 0.2.4
 # TODO: update description
 description: "Zadara Storage Operator: automatic CSI driver management and Data Protection services"
 # TODO: test k8s compatibility. Syntax: >= 1.13.0 < 1.14.0 || >= 1.14.1 < 1.15.0 || 1.x.x || 1.16.2 - 1.18.*

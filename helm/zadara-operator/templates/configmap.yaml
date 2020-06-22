@@ -24,7 +24,7 @@ data:
       reclaimPolicy: "Retain"
     csi:
       repository: zadara/csi-driver
-      tag: 1.2.4
+      tag: 1.2.5
       pullPolicy: IfNotPresent
 kind: ConfigMap
 metadata:
