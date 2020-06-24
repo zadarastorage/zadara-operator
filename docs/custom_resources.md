@@ -16,7 +16,7 @@
 
 ##  Vpsa
 
-Vpsa allows your Kubernetes cluster to connect to VPSA. For each Vpsa having `spec.csi` specified, Operator will automatically deploy a CSI Driver, and create sample Storage Classes (Block and NAS for each Storage Pool on that VPSA).
+VPSA allows your Kubernetes cluster to connect to VPSA. For each Vpsa having `spec.csi` specified, Operator will automatically deploy a CSI Driver, and create sample Storage Classes (Block and NAS for each Storage Pool on that VPSA).
 ```shell script
 kubectl get vpsas
 ```
@@ -53,9 +53,9 @@ Field | Description | Notes
 `spec.https` | Use https connection to the VPSA (default: http) | Required
 `spec.token` | Token of the VPSA | Required
 `spec.csi` | CSI provisioner |
-`spec.csi.autoExpandSupport` | Support VPSA Volume auto-expand feature. Enabled by default. To enable auto-expand for CSI Volumes, you need to configure Storage Class parameters.volumeOptions https://github.com/zadarastorage/zadara-csi/#storage-class. When autoExpandSupport is enabled, periodical sync will be handled by a CronJob, running in the same namespace as CSI driver. |
+`spec.csi.autoExpandSupport` | Support VPSA NAS Volume auto-expand feature. Enabled by default. To enable auto-expand for CSI Volumes, you need to configure Storage Class parameters.volumeOptions https://github.com/zadarastorage/zadara-csi/#storage-class. When autoExpandSupport is enabled, periodical sync will be handled by a CronJob, running in the same namespace as CSI driver. |
 `spec.csi.iscsiMode` | A way for the CSI plugin to reach iscsiadm on host https://github.com/zadarastorage/zadara-csi#node-iscsi-connectivity | Required. Allowed values: `"rootfs"`, `"client-server"`
-`spec.csi.provisioner` | CSI provisioner to be used in StorageClass, for example `csi.zadara.com`. More: https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner |
+`spec.csi.provisioner` | CSI provisioner to be used in a StorageClass, for example `csi.zadara.com`. More: https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner |
 `spec.csi.livenessProbe` | Liveness probe configuration for CSI driver. Default livenessProbe.handler is httpGet: {path:"/healthz", port:9808}. Note: livenessProbe.handler MUST be httpGet, with path "/healthz". Other options not allowed. livenessProbe.handler.port is configurable (default 9808) and MUST be unique for each CSI instance. More: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes |
 `spec.csi.livenessProbe.failureThreshold` | Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1. |
 `spec.csi.livenessProbe.initialDelaySeconds` | Number of seconds after the container has started before liveness probes are initiated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
@@ -144,7 +144,7 @@ spec:
 Field | Description | Notes
 ------|-------------|------
 `spec` | SnapshotPolicySpec defines the desired state of SnapshotPolicy |
-`spec.keepLast` | Amount of snapshots to keep. Oldest snapshots are deleted. | Required
+`spec.keepLast` | Retention policy for snapshots. Oldest snapshots are deleted. | Required
 `spec.schedule` | Either schedule in Cron format (see https://en.wikipedia.org/wiki/Cron) or "on-demand" | Required
 
 #### Status
