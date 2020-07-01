@@ -78,7 +78,7 @@ Field | Description | Notes
 Field | Description | Notes
 ------|-------------|------
 `status` | VpsaStatus defines the observed state of Vpsa |
-`status.state` |  | Required. Allowed values: `"CsiUnknown"`, `"CsiCreating"`, `"CsiReady"`, `"CsiDeleting"`, `"CsiFailed"`
+`status.state` |  | Required. Allowed values: `"Pending"`, `"CsiUnknown"`, `"CsiCreating"`, `"CsiReady"`, `"CsiDeleting"`, `"CsiFailed"`
 ##  AppDefinition
 
 AppDefinition allows to define which Kubernetes resources compose an Application, as a logical unit. This is done by means of namespaces and label-based selectors. The result of the query should include workloads (e.g Deployments, StatefulSets), RBAC, configuration (Secrets, ConfigMaps), storage, and all other resources required for the application to run.
@@ -115,7 +115,7 @@ Field | Description | Notes
 ------|-------------|------
 `status` | AppDefinitionStatus defines the observed state of AppDefinition |
 `status.apiObjects` | API objects (Deployments, StatefulSets, ConfigMaps, etc.) matching namespace and selector defined in the Spec. These objects will be included in ApplicationSnapshot. |
-`status.state` | State of the application | Required
+`status.state` | State of the application snapshot is one of the following: Pending - Application definition is waiting to Operator initialization. DoesNotExist - Application is not installed on cluster. NotRunning - Application exists on cluster but not running (no active pods running). Running - Application is running on cluster. | Required. Allowed values: `"Pending"`, `"DoesNotExist"`, `"NotRunning"`, `"Running"`
 ##  SnapshotPolicy
 
 SnapshotPolicy defines frequency for ApplicationSnapshots to be taken, and retention policy for cleaning up old ApplicationSnapshots.
@@ -151,7 +151,7 @@ Field | Description | Notes
 Field | Description | Notes
 ------|-------------|------
 `status` | SnapshotPolicyStatus defines the observed state of SnapshotPolicy |
-`status.ready` | Snapshot policy is ready to use |
+`status.state` | State of the Snapshot Policy can be one of the following: Pending - Snapshot Policy is waiting to Operator initialization. Ready - Snapshot Policy is valid and ready for use. | Required. Allowed values: `"Pending"`, `"Ready"`
 ##  SnapshotConfiguration
 
 SnapshotConfiguration allows to select application resources which must be included in ApplicationSnapshot (using namespace and labels), and to attach Snapshot Policies to the application (including Persistent Volumes on VPSA). Additionally, it provides information about all Application Snapshot created for this SnapshotConfiguration.
@@ -185,8 +185,7 @@ Field | Description | Notes
 ------|-------------|------
 `status` |  |
 `status.policies` | All policies mentioned in Spec with lists of all the related ApplicationSnapshots |
-`status.ready` | Snapshot configuration is ready to use |
-`status.state` | State of the Snapshot Configuration can be one of the following: Idle - No Application Snapshots using this configuration were created. Active - All Application Snapshots using this configuration were created successfully. Failed - Some Application Snapshots using this configuration are in failed state. | Required. Allowed values: `"Idle"`, `"Active"`, `"Failed"`
+`status.state` | State of the Snapshot Configuration can be one of the following: Pending - Snapshot configuration is waiting for required objects to be ready to use. Idle - No Application Snapshots using this configuration were created. Active - All Application Snapshots using this configuration were created successfully. Failed - Some Application Snapshots using this configuration are in failed state. | Required. Allowed values: `"Pending"`, `"Idle"`, `"Active"`, `"Failed"`
 ##  CloneConfiguration
 
 CloneConfiguration allows to specify which ApplicationSnapshot must be restored. Additionally, it allows to set destination namespace and renaming pattern for restored resources.
@@ -217,7 +216,6 @@ Field | Description | Notes
 `spec` |  |
 `spec.dryRun` | Run clone configuration checks only (default: false) |
 `spec.prefix` | Prefix to add to cloned resources (default: "clone-") |
-`spec.suffix` | Suffix to add to cloned resources (default: "") |
 `spec.targetNamespace` | Target namespaces to clone to | Required
 `spec.appClone` | Application Clone name (default: Prefix + AppSnapshot.Name + Suffix) |
 `spec.appClone.name` | Name of the Application Clone | Required
@@ -228,7 +226,7 @@ Field | Description | Notes
 Field | Description | Notes
 ------|-------------|------
 `status` |  |
-`status.ready` | Clone configuration is ready to use |
+`status.state` | State of the Clone Configuration can be one of the following: Pending - Clone configuration is waiting for required objects to be ready to use. Ready - Clone configuration is valid and ready for use. | Required. Allowed values: `"Pending"`, `"Ready"`
 ##  Invoker
 
 Invoker activates SnapshotConfiguration or CloneConfiguration. When SnapshotConfiguration is invoked, Operator will create a CronJob (for recurring Snapshot Policies), or a Job (for on-demand policy), which will create a new ApplicationSnapshot. When CloneConfiguration is invoked, Operator will create a new ApplicationClone object, eventually causing ApplicationSnapshot to be cloned. Deleting Invoker is an equivalent to stopping a SnapshotPolicy, or a cloning process (Application Snapshots or Clones will not be deleted).
@@ -262,7 +260,7 @@ Field | Description | Notes
 Field | Description | Notes
 ------|-------------|------
 `status` | InvokerStatus defines the observed state of Invoker |
-`status.ready` | Invoker is ready to use |
+`status.state` | State of the Invoker can be one of the following: Pending - Invoker is waiting for required objects to be ready to use. Ready - Invoker is valid and ready for use. | Required. Allowed values: `"Pending"`, `"Ready"`
 ##  ApplicationClone
 
 ApplicationClone is an internal resource, created by Operator. It includes a list of all restored Kubernetes resources and VPSA Volumes, and provides information about restore status for each item. When ApplicationClone is created, Operator starts cloning VPSA Volumes, and restoring Kubernetes resources, from the ApplicationSnapshot.
@@ -295,7 +293,7 @@ Field | Description | Notes
 `status.pvcs` | PVCs of the Application |
 `status.pvs` | PVs of the Application |
 `status.resourceKinds` | Resource Kinds (Group, Version, Resource) of the Application (including the APIObjects) |
-`status.state` | State of the ApplicationClone | Required. Allowed values: `"Pending"`, `"Creating"`, `"Created"`, `"Failed"`, `"Deleting"`
+`status.state` | State of the ApplicationClone | Required. Allowed values: `"Pending"`, `"Initialized"`, `"Creating"`, `"Created"`, `"Failed"`, `"Deleting"`
 ##  ApplicationSnapshot
 
 ApplicationSnapshot is an internal resource, created by Operator. It includes all Application metadata (such as Deployment, StatefulSet, ConfigMap, PersistentVolumeClaim, and other Kubernetes resources) and Snapshots of Data, stored on VPSA. When ApplicationSnapshot is created, Operator creates snapshots of VPSA Volumes, and stores serialized Kubernetes resources in the ApplicationSnapshot. ApplicationSnapshot can appear only in one CloneConfiguration at the same time (User can't clone the same ApplicationSnapshot twice).
@@ -336,4 +334,4 @@ Field | Description | Notes
 Field | Description | Notes
 ------|-------------|------
 `status` | ApplicationSnapshotStatus defines the observed state of ApplicationSnapshot |
-`status.state` | State of the application snapshot is one of the following: Pending - Snapshot is pending to Operator to start snapshot creation. SuspendingIO - Suspending IO of VPSAs volumes to be crash-consistent. Creating - Snapshot is being created by the VPSAs. Created - Snapshot is created and ready to be cloned. Failed - Snapshot creation failed, can't cloned from this snapshot. Deleting - Snapshot is being deleted in the VPSAs. | Required. Allowed values: `"Pending"`, `"SuspendingIO"`, `"Creating"`, `"Failed"`, `"Created"`, `"Deleting"`
+`status.state` | State of the application snapshot is one of the following: Pending - Snapshot is waiting for required objects to be ready to use. Initialized - Snapshot was initialized. SuspendingIO - Suspending IO of VPSAs volumes to be crash-consistent. Creating - Snapshot is being created by the VPSAs. Created - Snapshot is created and ready to be cloned. Failed - Snapshot creation failed, can't cloned from this snapshot. Deleting - Snapshot is being deleted in the VPSAs. | Required. Allowed values: `"Pending"`, `"Initialized"`, `"SuspendingIO"`, `"Creating"`, `"Failed"`, `"Created"`, `"Deleting"`

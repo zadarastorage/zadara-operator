@@ -75,8 +75,10 @@ Zadara Operator (zOperator) is configured using a [K8s ConfigMap](https://kubern
 ---
 ### CLI
 
-Zadara K8s CLI provides centralized management for Zadara's K8s assets
+Zadara K8s CLI provides centralized management for Zadara's K8s assets.
+
 [CLI Download](cli)
+
 [Documentation](cli/docs/README.md)
 
 ---

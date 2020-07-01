@@ -2,13 +2,33 @@
 ####   Successfully installed Zadara Operator                             ####
 ##############################################################################
 
+The Zadara Operator provides storage and data management for K8s stateful
+applications as a cloud-native service, while leveraging Zadara's enterprise
+grade Storage-as-a-Service VPSA for provisioning and managing persistent
+storage.
+
+Zadara Operator provides:
+* Zadara CSI driver automatic installation and management
+* Automatic K8s application discovery
+* Application protection using an intelligent and efficient snapshots mechanism.
+* Custom snapshots scheduling for application protection
+* Instant application clone
+* CLI for centralized management for Zadara's K8s assets
+
 User guide: https://github.com/zadarastorage/zadara-operator
 
-For your convenience, we suggest downloading CLI helper tool, available at:
-https://github.com/zadarastorage/zadara-operator/tree/release/cli
+For your convenience, we suggest downloading CLI helper tool, available at using:
+POD_NAME=$(kubectl get pods -A -l name=zoperator -o custom-columns=NAME:.metadata.name --no-headers=true)
+POD_NAMESPACE=$(kubectl get pods -A -l name=zoperator -o custom-columns=NAMESPACE:.metadata.namespace --no-headers=true)
+kubectl cp ${POD_NAMESPACE}/${POD_NAME}:/zadara /usr/local/bin/zadara
 
-Start with creating Vpsa:
+To load completion run
 
-cat <<EOF | kubectl apply -f -
-{{ .Files.Get "example-vpsa.yaml" }}
-EOF
+. <(zadara completion)
+
+To configure your bash shell to load completions for each session add to your bashrc
+
+# ~/.bashrc or ~/.profile
+. <(zadara completion)
+
+More information at https://www.zadara.com/

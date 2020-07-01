@@ -10,7 +10,7 @@ Install Zadara Operator into `zadara` namespace:
 ```shell script
 $ helm install zoperator --namespace zadara --create-namespace ./helm/zadara-operator/
 NAME: zoperator
-LAST DEPLOYED: Thu Jun 18 11:08:10 2020
+LAST DEPLOYED: Thu Jun 25 14:28:46 2020
 NAMESPACE: zadara
 STATUS: deployed
 REVISION: 1
@@ -20,12 +20,20 @@ NOTES:
 ####   Successfully installed Zadara Operator                             ####
 ##############################################################################
 
+The Zadara Operator provides storage and data management for K8s stateful
+applications as a cloud-native service, while leveraging Zadara's enterprise
+grade Storage-as-a-Service VPSA for provisioning and managing persistent
+storage.
+
+Zadara Operator provides:
+* Zadara CSI driver automatic installation and management
+* Automatic K8s application discovery
+* Application protection using an intelligent and efficient snapshots mechanism.
+* Custom snapshots scheduling for application protection
+* Instant application clone
+* CLI for centralized management for Zadara's K8s assets
+
 User guide: https://github.com/zadarastorage/zadara-operator
-
-For your convenience, we suggest downloading CLI helper tool, available at:
-https://github.com/zadarastorage/zadara-operator/tree/release/cli
-
-Start with creating Vpsa:
 ...
 ```
 
