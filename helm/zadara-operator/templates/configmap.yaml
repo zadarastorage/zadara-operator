@@ -22,6 +22,9 @@ data:
     # See https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy
     defaultStorageClass:
       reclaimPolicy: "Retain"
+    appDiscoverExcludedNamespaces:
+      - "kube-system"
+      - "openshift"
     csi:
       repository: zadara/csi-driver
       tag: 1.2.6

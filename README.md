@@ -76,10 +76,33 @@ Zadara Operator (zOperator) is configured using a [K8s ConfigMap](https://kubern
 ### CLI
 
 Zadara K8s CLI provides centralized management for Zadara's K8s assets.
+The CLI allows managing applications, snapshots & clones.
+the CLI also allows controlling and manage the Operator like viewing the status of the cluster, managing Operator configuration, viewing CSI/Operator logs and more.
+In addition, the CLI support helper commands such as managing storageclass & volumes.
 
-[CLI Download](cli)
+#### Install
 
-[Documentation](cli/docs/README.md)
+* If zOperator installed on your cluster, you may copy CLI from it:
+```shell script
+POD_NAME=$(kubectl get pods -A -l name=zoperator -o custom-columns=NAME:.metadata.name --no-headers=true)
+POD_NAMESPACE=$(kubectl get pods -A -l name=zoperator -o custom-columns=NAMESPACE:.metadata.namespace --no-headers=true)
+kubectl cp $POD_NAMESPACE/$POD_NAME:zadara /usr/local/bin/zadara && chmod +x /usr/local/bin/zadara
+```
+
+* You may also download the CLI (for Linux) from [here](cli/zadara) and copy it to '/usr/local/bin/zadara'.
+
+#### Shell Completion
+
+Zadara CLI can generate shell completions for multiple shells. The currently supported shells are:
+
+* Bash
+* Zsh
+* Fish
+* PowerShell
+
+To enable autocomplete for your shell, run `zadara completion --help` and follow the instructions.
+
+More information at [Documentation](cli/docs/README.md)
 
 ---
 ### CSI Driver
@@ -91,6 +114,5 @@ More information at https://github.com/zadarastorage/zadara-csi
 ### Contact Us
 
 Got a question? we love to help - email us at **k8s@zadara.com** or visit https://support.zadarastorage.com.
-
 
 ---

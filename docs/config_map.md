@@ -18,6 +18,9 @@ logLevel:
 useLogColors: "false"
 defaultStorageClass:
   reclaimPolicy: "Retain"
+appDiscoverExcludedNamespaces:
+  - "kube-system"
+  - "openshift"
 csi:
   repository: quay.io/zadara/csi-driver
   tag: 1.2.1
