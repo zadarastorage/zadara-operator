@@ -8,6 +8,10 @@ spec:
     description: Status of SnapshotConfiguration
     name: Status
     type: string
+  - JSONPath: .spec.appDefinition
+    description: AppDefinition name
+    name: App
+    type: string
   group: zadara.com
   names:
     kind: SnapshotConfiguration

@@ -5,7 +5,8 @@ Zadara Operator Helm chart supports only [Helm 3](https://helm.sh/docs/intro/ins
 
 ## Install
 
-Install Zadara Operator into `zadara` namespace:
+Install Zadara Operator into `zadara` namespace, using command below.
+No `values.yaml` is required to install.
 
 ```shell script
 $ helm install zoperator --namespace zadara --create-namespace ./helm/zadara-operator/
@@ -20,24 +21,33 @@ NOTES:
 ####   Successfully installed Zadara Operator                             ####
 ##############################################################################
 
-The Zadara Operator provides storage and data management for K8s stateful
-applications as a cloud-native service, while leveraging Zadara's enterprise
-grade Storage-as-a-Service VPSA for provisioning and managing persistent
-storage.
-
-Zadara Operator provides:
-* Zadara CSI driver automatic installation and management
-* Automatic K8s application discovery
-* Application protection using an intelligent and efficient snapshots mechanism.
-* Custom snapshots scheduling for application protection
-* Instant application clone
-* CLI for centralized management for Zadara's K8s assets
-
 User guide: https://github.com/zadarastorage/zadara-operator
+
 ...
 ```
 
-No `values.yaml` is required to install.
+## Verify installation
+
+Verify that all Custom Resource Definitions are present:
+```shell script
+$ kubectl api-resources --api-group zadara.com
+NAME                     SHORTNAMES   APIGROUP     NAMESPACED   KIND
+appdefinitions                        zadara.com   false        AppDefinition
+applicationclones                     zadara.com   true         ApplicationClone
+applicationsnapshots                  zadara.com   true         ApplicationSnapshot
+cloneconfigurations                   zadara.com   true         CloneConfiguration
+invokers                              zadara.com   true         Invoker
+snapshotconfigurations                zadara.com   true         SnapshotConfiguration
+snapshotpolicies                      zadara.com   false        SnapshotPolicy
+vpsas                                 zadara.com   false        Vpsa
+```
+
+Verify that Operator pod is running:
+```shell script
+$ kubectl get pods --namespace zadara
+NAME                        READY   STATUS    RESTARTS   AGE
+zoperator-f46797cbb-fnxgp   1/1     Running   0          39s
+```
 
 ## Uninstall
 

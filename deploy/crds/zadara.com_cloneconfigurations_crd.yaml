@@ -11,7 +11,7 @@ spec:
     description: Name of ApplicationSnapshot to clone
     name: Snapshot
     type: string
-  - JSONPath: .status.appClone.name
+  - JSONPath: .spec.appClone.name
     description: Name of created ApplicationClone
     name: Clone
     type: string
