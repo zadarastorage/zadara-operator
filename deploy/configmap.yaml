@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   zadara-operator-config.yaml: |
     # Verbosity level for logs.
-    # Allowed values: panic, fatal, error, warn or warning, info, debug
+    # Allowed values: fatal, error, warn or warning, info, debug
     logLevel:
       app-definition: "info"
       app-clone: "info"

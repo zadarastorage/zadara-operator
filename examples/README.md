@@ -5,11 +5,11 @@
 - Setup Kubernetes node
 - Clone this repository locally
 - Create a VPSA,
-make sure it supports SnapshotSet API (TODO-dev: add instructions),
+make sure it supports SnapshotSet API (available since version 20.11),
 create at least one Storage Pool on VPSA
 - [Generate API Token](http://guides.zadarastorage.com/vpsa-guide/1908/managing-access-control.html#managing-user-passwords)
 for VPSA, if you don't have one
-- Verify that your Kubernetes node has ping to your VPSA
+- Verify that your Kubernetes nodes have ping to your VPSA
 
 ## Common flow
 
@@ -46,51 +46,34 @@ All examples use the same workflow:
 ## For the impatient
 
 ```shell script
-# Replace here:
+# Create Operator in "zadara" namespace
+helm install zoperator --namespace zadara --create-namespace ./helm/zadara-operator/
+# Set credentials and create a Vpsa custom resource
 HOSTNAME=<SET HOSTNAME!>
 TOKEN=<SET TOKEN!>
-# Create and configure Operator
-cd zoperator
 sed -i s/HOSTNAME_HERE/$HOSTNAME/ examples/common/vpsa.yaml
 sed -i s/TOKEN_HERE/$TOKEN/ examples/common/vpsa.yaml
-make kreate
 kubectl create -f examples/common/vpsa.yaml
 ```
 
 ```shell script
 # Cleanup Operator
-kubectl delete -f examples/common/vpsa.yaml
-make klean
+helm uninstall --namespace zadara zoperator
 ```
 
 ---
 
 ## Install Zadara Operator
 
-```shell script
-$ cd zoperator
-$ make kreate
-customresourcedefinition.apiextensions.k8s.io/appdefinitions.zadara.com created
-customresourcedefinition.apiextensions.k8s.io/snapshotpolicies.zadara.com created
-customresourcedefinition.apiextensions.k8s.io/applicationclones.zadara.com created
-customresourcedefinition.apiextensions.k8s.io/invokers.zadara.com created
-customresourcedefinition.apiextensions.k8s.io/cloneconfigurations.zadara.com created
-customresourcedefinition.apiextensions.k8s.io/applicationsnapshots.zadara.com created
-customresourcedefinition.apiextensions.k8s.io/snapshotconfigurations.zadara.com created
-clusterrole.rbac.authorization.k8s.io/zoperator created
-clusterrolebinding.rbac.authorization.k8s.io/zoperator created
-deployment.apps/zoperator created
-configmap/zoperator-config-map created
-customresourcedefinition.apiextensions.k8s.io/vpsas.zadara.com created
-```
-
-TODO-dev: create a Helm chart
+Follow the instructions in [Helm installation manual](../docs/install_helm.md)
 
 ## Add a VPSA
 
 Edit `examples/common/vpsa.yaml` and set VPSA credentials: `hostname`, `https` and `token`.
 
-Create VPSA definition in Kubernetes:
+Typically, `https: true` is used when VPSA hostname is a DNS name like `vsa-00000042-zadara-test-01.zadaravpsa.com`, and `https: false` is used with IP address hostname.
+
+Create VPSA Custom Resource in Kubernetes:
 
 ```shell script
 $ kubectl create -f examples/common/vpsa.yaml
@@ -112,15 +95,41 @@ especially the first time, when Kubernetes needs to pull all container images.*
 
 ##### Example scenarios:
 
-- [Using Application Snapshots and Clones with Cassandra](cassandra/README.md)
+- [Using Application Snapshots and Clones with Cassandra](cassandra/README.md).
+  This scenario demonstrates creating of snapshots and clones of a 2-replicas
+  Cassandra StatefulSet, working with multiple recurring Snapshot Policies.
 
-- [Using on-demand Application Snapshots for MySQL](mysql/README.md)
+- [Using on-demand Application Snapshots for MySQL](mysql/README.md).
+  This scenario features installing 1-replica MySQL from Helm charts repository,
+  configuring default storage class, and creating on-demand snapshots and clones.
 
-
+- [Migrate MySQL to another cluster](import/README.md).
+  This scenario demonstrates migration of MySQL deployment, where the new deployment uses cloned volumes of the same VPSA (i.e compute resources migration).
+  Also, this includes multiple examples of `zadara` CLI usage. 
+  
 ## Cleanup
 
 First, make sure you finished cleanup,
-as described in application-specific scenarios (links in a previous section)
+as described in application-specific scenarios (links in a previous section).
+
+You can run `zadara status` to see all Zadara Custom Resources and related objects.
+Output should be similar to the example below: Operator and CSI pods, Storage Classes (SC) and VPSAs (no ApplicationSnapshots, ApplicationClones, etc).
+```shell script
+$ zadara status
+OPERATOR POD                    NODE            READY
+zoperator-7db7c5ddf7-vx76j      k8s-base-master true
+
+CSI POD                                                 PROVISIONER     NODE            READY
+example-vpsa-csi-zadara-controller-6bfc6ddbb4-m6khj     csi.zadara.com  k8s-base-master true
+example-vpsa-csi-zadara-node-smj86                      csi.zadara.com  k8s-base-master true
+
+SC                                 PROVISIONER      RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+example-vpsa-pool-00010003-block   csi.zadara.com   Retain          Immediate           true                   2d19h
+example-vpsa-pool-00010003-nas     csi.zadara.com   Retain          Immediate           true                   2d19h
+
+VPSAS          STATUS     PROVISIONER      HOSTNAME      AUTOEXPAND   AGE
+example-vpsa   CsiReady   csi.zadara.com   10.10.10.10   true         2d19h
+```
 
 Delete VPSA
 ```shell script
@@ -128,20 +137,4 @@ $ kubectl delete -f examples/common/vpsa.yaml
 vpsa.zadara.com "example-vpsa" deleted
 ```
 
-Delete Operator
-```shell script
-$ make klean
-customresourcedefinition.apiextensions.k8s.io "appdefinitions.zadara.com" deleted
-customresourcedefinition.apiextensions.k8s.io "snapshotpolicies.zadara.com" deleted
-customresourcedefinition.apiextensions.k8s.io "applicationclones.zadara.com" deleted
-customresourcedefinition.apiextensions.k8s.io "invokers.zadara.com" deleted
-customresourcedefinition.apiextensions.k8s.io "cloneconfigurations.zadara.com" deleted
-customresourcedefinition.apiextensions.k8s.io "applicationsnapshots.zadara.com" deleted
-customresourcedefinition.apiextensions.k8s.io "snapshotconfigurations.zadara.com" deleted
-clusterrole.rbac.authorization.k8s.io "zoperator" deleted
-clusterrolebinding.rbac.authorization.k8s.io "zoperator" deleted
-deployment.apps "zoperator" deleted
-configmap "zoperator-config-map" deleted
-customresourcedefinition.apiextensions.k8s.io "vpsas.zadara.com" deleted
-```
-TODO-dev: delete using Helm chart
+To delete Operator follow the instructions in [Helm installation manual](../docs/install_helm.md#uninstall)

@@ -15,7 +15,7 @@ spec:
       serviceAccountName: zoperator
       containers:
         - name: zoperator
-          image: "zadara/zoperator:0.2.9"
+          image: "zadara/zoperator:0.3.0"
           command:
             # note: this overrides ENTRYPOINT defined in Docker image
             - zoperator

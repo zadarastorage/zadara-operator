@@ -31,7 +31,7 @@ spec:
 
 Here is the Zadara CRs dependencies diagram:
 
-![Image](cr_dependecies.png)
+![Image](cr_dependencies.png)
 
 For every CR which is being used (arrow ⟶ to CR in the diagram), there must be
 *zadara.com/in-use-protection* [finalizer](https://kubernetes.cn/docs/reference/using-api/api-concepts/#resource-deletion).

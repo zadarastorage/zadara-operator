@@ -13,7 +13,7 @@ In this example:
 ```shell script
 # Deploy application
 STORAGE_CLASS_NAME=$(kubectl get sc -l provisioner=csi.zadara.com | grep nas | awk '{print $1}')
-hack/set_default_storage_class.sh ${STORAGE_CLASS_NAME}
+zadara storageclass set-default ${STORAGE_CLASS_NAME}
 helm install test-mysql stable/mysql # 'helm install --name test-mysql stable/mysql' for Helm 2
 # Configure and create Snapshots
 kubectl create -f examples/common/policy-on-demand.yaml
@@ -22,10 +22,8 @@ kubectl get appdefinitions.zadara.com default-test-mysql --watch
 kubectl create -n zadara -f examples/mysql/snapshot-configuration-od.yaml
 kubectl create -n zadara -f examples/mysql/invoker-snapshot-cfg-od.yaml
 kubectl get applicationsnapshots.zadara.com --watch -n zadara # wait for application snapshot to be created
-# Patch Snapshot, to remove conflicting clusterIP
-SNAPSHOT=$(kubectl get applicationsnapshots.zadara.com -n zadara | grep Created | tail -n1 | awk '{print $1}')
-kubectl get applicationsnapshot $SNAPSHOT -n zadara -o yaml | sed s/\"clusterIP\":\"[^\"]*\",*// | kubectl replace -f -
 # Configure and create Clone of a Snapshot
+SNAPSHOT=$(kubectl get applicationsnapshots.zadara.com -n zadara | grep Created | tail -n1 | awk '{print $1}')
 sed -i s/SNAPSHOT_NAME_HERE/$SNAPSHOT/ examples/mysql/clone-configuration.yaml
 kubectl create -n zadara -f examples/mysql/clone-configuration.yaml
 kubectl create -n zadara -f examples/mysql/invoker-clone-cfg.yaml
@@ -65,12 +63,10 @@ You can use either `kubectl` command:
 ```shell script
 kubectl patch sc example-vpsa-pool-00010003-nas -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```
-or use helper script:
+or use `zadara` CLI tool:
 ```shell script
-$ hack/set_default_storage_class.sh example-vpsa-pool-00010003-nas
-storageclass.storage.k8s.io/example-vpsa-pool-00010003-block patched (no change)
-storageclass.storage.k8s.io/example-vpsa-pool-00010003-nas patched
-storageclass.storage.k8s.io/example-vpsa-pool-00010003-nas patched
+$ zadara storageclass set-default example-vpsa-pool-00010003-nas
+StorageClass example-vpsa-pool-00010003-nas was successfully set as default
 ```
 
 Verify that `example-vpsa-pool-00010003-nas` is now default
@@ -133,8 +129,8 @@ Note that the operator also auto-discover the MySql application and creates AppD
 Wait for automatic discover to create AppDefinition
 ```shell script
 $ kubectl get appdefinitions.zadara.com default-test-mysql -w
-NAME                 AUTODISCOVER
-default-test-mysql   true
+NAME                 AUTODISCOVER   APPNAMESPACE   STATUS    SELECTOR
+default-test-mysql   true           default        Running   map[app:test-mysql]
 ```
 
 Note that you can check which API objects are in the AppDefinition and check if the application is running.
@@ -258,17 +254,6 @@ Spec:
 Status:
   State:  Created
 Events:   <none>
-```
-
-Now, if we try to clone this snapshot, original and cloned `Service` objects will conflict,
-because of having the same `spec.clusterIP`.
-We will remove `spec.clusterIP`, causing Kubernetes to automatically chose a new IP for cloned Service.
-
-TODO-dev: hanlde such cases automatically
-
-```shell script
-$ kubectl get applicationsnapshot -n zadara mysql-on-demand-snapshot-cfg-2020-04-16--09-26-49 -o yaml | sed s/\"clusterIP\":\"[^\"]*\",*// | kubectl replace -f -
-applicationsnapshot.zadara.com/mysql-on-demand-snapshot-cfg-2020-04-16--09-26-49 replaced
 ```
 
 ## Clone Application Snapshot

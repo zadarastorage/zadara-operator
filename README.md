@@ -37,11 +37,12 @@ storage.
 
 Zadara Operator provides:
 * Zadara CSI driver automatic installation and management
-* Automatic K8s application discovery
+* Automatic K8s application discovery.
 * Application protection using an intelligent and efficient snapshots mechanism.
-* Custom snapshots scheduling for application protection
-* Instant application clone
-* CLI for centralized management for Zadara's K8s assets
+* Custom snapshots scheduling for application protection.
+* Instant application clone.
+* CLI for centralized management for Zadara's K8s assets.
+* Migrate application from one cluster to another.
 
 
 ### About Zadara
@@ -115,4 +116,3 @@ More information at https://github.com/zadarastorage/zadara-csi
 
 Got a question? we love to help - email us at **k8s@zadara.com** or visit https://support.zadarastorage.com.
 
----
