@@ -81,6 +81,8 @@ VPSAS          STATUS     PROVISIONER      HOSTNAME      AUTOEXPAND   AGE
 example-vpsa   CsiReady   csi.zadara.com   10.10.10.10   true         2d23h
 ```
 
+Note: It is mandatory to have on both source/destination k8s cluster ends a zadara operator in healthy condition.
+
 ### Deploy an application
 
 Install the latest mysql Helm chart. This time we will install it to a new namespace `mysql`.
