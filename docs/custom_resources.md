@@ -205,7 +205,6 @@ spec:
     name: "mysql-snap-2020-01-26"
   dryRun: false
   prefix: "clone-"
-  suffix: ""
   targetNamespace: "test"
 
 ```
